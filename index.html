@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OlamGeorg | CHM 111 Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --surface: #1a1a2e;
+    --card: #16213e;
+    --border: #2d2d50;
+    --violet: #7c3aed;
+    --violet-light: #a78bfa;
+    --pink: #ec4899;
+    --cyan: #06b6d4;
+    --amber: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  .theme-ocean { --bg:#0a1628;--surface:#0f2040;--card:#112244;--border:#1e3a6e;--violet:#3b82f6;--violet-light:#93c5fd;--pink:#06b6d4;--cyan:#38bdf8;--amber:#f59e0b;--green:#10b981; }
+  .theme-forest { --bg:#071a0e;--surface:#0d2b16;--card:#0f3319;--border:#1a5c2a;--violet:#16a34a;--violet-light:#86efac;--pink:#84cc16;--cyan:#22c55e;--amber:#fbbf24;--green:#4ade80; }
+  .theme-sunset { --bg:#1a0a00;--surface:#2d1200;--card:#3d1800;--border:#6b2d00;--violet:#f97316;--violet-light:#fdba74;--pink:#ec4899;--cyan:#f59e0b;--amber:#fcd34d;--green:#84cc16; }
+  .theme-light { --bg:#f8fafc;--surface:#ffffff;--card:#f1f5f9;--border:#e2e8f0;--violet:#7c3aed;--violet-light:#6d28d9;--pink:#ec4899;--cyan:#0891b2;--amber:#d97706;--green:#059669;--text:#0f172a;--muted:#475569; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; transition: background 0.4s, color 0.4s; }
+
+  /* ── LAYOUT ── */
+  .app { max-width: 800px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  /* ── HEADER ── */
+  .header { text-align: center; padding: 32px 0 24px; }
+  .logo { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px,6vw,42px); font-weight: 700; background: linear-gradient(135deg, var(--violet-light), var(--pink), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .logo span { font-weight: 400; opacity: 0.7; }
+  .subtitle { color: var(--muted); font-size: clamp(13px,3vw,16px); margin-top: 6px; }
+
+  /* ── SETTINGS TOOLBAR ── */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 24px; }
+  .toolbar-group { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .toolbar-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .pill-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .pill { background: var(--surface); border: 1.5px solid var(--border); border-radius: 100px; padding: 7px 16px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--muted); transition: all 0.2s; white-space: nowrap; }
+  .pill:hover { border-color: var(--violet-light); color: var(--violet-light); }
+  .pill.active { background: var(--violet); border-color: var(--violet); color: #fff; }
+
+  /* ── TOPIC SELECTOR ── */
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .topic-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 14px 12px; cursor: pointer; text-align: center; transition: all 0.2s; }
+  .topic-card:hover { border-color: var(--violet-light); transform: translateY(-2px); }
+  .topic-card.active { border-color: var(--violet); background: rgba(124,58,237,0.15); }
+  .topic-icon { font-size: 24px; margin-bottom: 6px; }
+  .topic-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .topic-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── START CARD ── */
+  .start-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 28px 24px; text-align: center; margin-bottom: 20px; }
+  .start-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(18px,4vw,24px); font-weight: 700; margin-bottom: 10px; }
+  .start-meta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 16px 0 20px; }
+  .meta-chip { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--muted); }
+  .meta-chip strong { color: var(--text); }
+
+  /* ── BUTTONS ── */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: var(--radius-sm); padding: 14px 28px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+  .btn-primary { background: linear-gradient(135deg, var(--violet), var(--pink)); color: #fff; width: 100%; }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--violet-light); color: var(--violet-light); }
+  .btn-sm { padding: 9px 18px; font-size: 14px; }
+  .btn-icon { width: 40px; height: 40px; padding: 0; border-radius: 10px; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap { margin-bottom: 20px; }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 13px; color: var(--muted); }
+  .progress-num { font-size: 14px; font-weight: 600; color: var(--violet-light); }
+  .progress-track { background: var(--border); border-radius: 100px; height: 8px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, var(--violet), var(--pink)); height: 100%; border-radius: 100px; transition: width 0.4s ease; }
+
+  /* ── TIMER ── */
+  .timer { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: 6px 14px; font-size: 15px; font-weight: 600; color: var(--text); }
+  .timer.warning { border-color: var(--amber); color: var(--amber); }
+  .timer.danger { border-color: var(--red); color: var(--red); animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  /* ── QUIZ CARD ── */
+  .quiz-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: clamp(20px,5vw,32px); margin-bottom: 16px; }
+  .q-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+  .q-badge { background: linear-gradient(135deg, var(--violet), var(--pink)); color: #fff; border-radius: 8px; padding: 4px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .q-topic-tag { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-size: 11px; color: var(--muted); }
+  .q-text { font-size: clamp(16px,3.5vw,20px); font-weight: 600; line-height: 1.5; color: var(--text); margin-bottom: 22px; font-family: 'Space Grotesk', sans-serif; }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; transition: all 0.2s; text-align: left; width: 100%; font-family: 'Inter', sans-serif; color: var(--text); font-size: clamp(14px,3vw,16px); }
+  .option:hover:not(:disabled) { border-color: var(--violet-light); background: rgba(124,58,237,0.1); }
+  .option.selected { border-color: var(--violet); background: rgba(124,58,237,0.15); }
+  .option.correct { border-color: var(--green); background: rgba(16,185,129,0.15); }
+  .option.wrong { border-color: var(--red); background: rgba(239,68,68,0.1); }
+  .option-letter { width: 28px; height: 28px; min-width: 28px; border-radius: 7px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted); transition: all 0.2s; }
+  .option.selected .option-letter { background: var(--violet); color: #fff; }
+  .option.correct .option-letter { background: var(--green); color: #fff; }
+  .option.wrong .option-letter { background: var(--red); color: #fff; }
+  .option-text { flex: 1; line-height: 1.5; padding-top: 2px; }
+
+  /* ── FILL BLANK / SHORT ANSWER ── */
+  .fill-input { width: 100%; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; font-size: 16px; color: var(--text); font-family: 'Inter', sans-serif; transition: border-color 0.2s; outline: none; }
+  .fill-input:focus { border-color: var(--violet); }
+  .fill-input.correct { border-color: var(--green); }
+  .fill-input.wrong { border-color: var(--red); }
+
+  /* ── EXPLANATION ── */
+  .explanation { background: var(--card); border-left: 4px solid var(--cyan); border-radius: var(--radius-sm); padding: 14px 18px; margin-top: 14px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .explanation strong { color: var(--cyan); }
+
+  /* ── NAV BUTTONS ── */
+  .nav-row { display: flex; gap: 10px; margin-top: 16px; }
+  .nav-row .btn { flex: 1; }
+
+  /* ── SCORE CARD ── */
+  .score-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: clamp(24px,6vw,40px); text-align: center; }
+  .score-ring { width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+  .score-ring svg { position: absolute; top:0;left:0;width:100%;height:100%;transform:rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 10; }
+  .score-bg { stroke: var(--border); }
+  .score-fg { stroke-dasharray: 339.3; stroke-dashoffset: 339.3; transition: stroke-dashoffset 1.2s ease; stroke-linecap: round; }
+  .score-pct { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; color: var(--text); z-index: 1; }
+  .score-label { font-size: 13px; color: var(--muted); z-index: 1; }
+  .score-grade { font-family: 'Space Grotesk', sans-serif; font-size: clamp(22px,5vw,32px); font-weight: 700; margin-bottom: 8px; }
+  .score-msg { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
+  .score-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 10px; }
+  .stat-val { font-size: clamp(20px,4vw,26px); font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+  .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .score-actions { display: flex; flex-direction: column; gap: 10px; }
+
+  /* ── REVIEW MODE ── */
+  .review-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; }
+  .review-status { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; font-weight: 600; }
+  .dot-correct { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+  .dot-wrong { width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+  .dot-skip { width: 10px; height: 10px; border-radius: 50%; background: var(--amber); }
+
+  /* ── BOOKMARKS ── */
+  .bookmark-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; padding: 4px; transition: color 0.2s; }
+  .bookmark-btn.active { color: var(--amber); }
+
+  /* ── SECTION TITLE ── */
+  .section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(16px,3.5vw,20px); font-weight: 700; color: var(--text); margin-bottom: 14px; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:480px) {
+    .toolbar { gap: 8px; }
+    .pill { padding: 7px 12px; font-size: 12px; }
+    .topic-grid { grid-template-columns: 1fr 1fr; }
+    .score-stats { grid-template-columns: 1fr 1fr 1fr; }
+    .nav-row { flex-direction: column; }
+    .nav-row .btn { width: 100%; }
+  }
+
+  /* ── TOAST ── */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface); border: 1.5px solid var(--border); border-radius: 100px; padding: 12px 24px; font-size: 14px; font-weight: 500; color: var(--text); transition: transform 0.3s; z-index: 100; white-space: nowrap; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--green); color: var(--green); }
+  .toast.error { border-color: var(--red); color: var(--red); }
+
+  /* ── LOADING ── */
+  .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; gap: 16px; }
+  .spinner { width: 44px; height: 44px; border: 4px solid var(--border); border-top-color: var(--violet); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hidden { display: none; }
+  select { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; cursor: pointer; outline: none; }
+  select:focus { border-color: var(--violet); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">Olam<span>Georg</span></div>
+    <div class="subtitle">CHM 111 · 2025/2026 Session · Interactive Study Quiz</div>
+  </div>
+
+  <!-- ──────────── HOME SCREEN ──────────── -->
+  <div class="screen active" id="screen-home">
+
+    <!-- SETTINGS TOOLBAR -->
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <div class="toolbar-label">Mode</div>
+        <div class="pill-row" id="mode-pills">
+          <button class="pill active" data-mode="practice" onclick="setMode(this)">📚 Practice</button>
+          <button class="pill" data-mode="exam" onclick="setMode(this)">⏱ Exam</button>
+          <button class="pill" data-mode="review" onclick="setMode(this)">🔍 Review</button>
+        </div>
+      </div>
+      <div class="toolbar-group">
+        <div class="toolbar-label">Theme</div>
+        <div class="pill-row">
+          <button class="pill active" onclick="setTheme(this,'')">🌌 Vibrant</button>
+          <button class="pill" onclick="setTheme(this,'ocean')">🌊 Ocean</button>
+          <button class="pill" onclick="setTheme(this,'forest')">🌿 Forest</button>
+          <button class="pill" onclick="setTheme(this,'sunset')">🌅 Sunset</button>
+          <button class="pill" onclick="setTheme(this,'light')">☀️ Light</button>
+        </div>
+      </div>
+      <div class="toolbar-group">
+        <div class="toolbar-label">Questions</div>
+        <div class="pill-row" id="count-pills">
+          <button class="pill active" data-count="10" onclick="setCount(this)">10</button>
+          <button class="pill" data-count="20" onclick="setCount(this)">20</button>
+          <button class="pill" data-count="30" onclick="setCount(this)">30</button>
+          <button class="pill" data-count="50" onclick="setCount(this)">50</button>
+          <button class="pill" data-count="all" onclick="setCount(this)">All</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPIC SELECTOR -->
+    <div class="section-title">Choose Topics</div>
+    <div class="topic-grid" id="topic-grid"></div>
+
+    <!-- START CARD -->
+    <div class="start-card">
+      <div class="start-title">Ready to Study? 🚀</div>
+      <div id="start-meta" class="start-meta"></div>
+      <button class="btn btn-primary" onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <!-- BOOKMARKED -->
+    <div id="bookmarks-section" class="hidden">
+      <div class="section-title" style="margin-top:24px">⭐ Bookmarked Questions</div>
+      <div id="bookmarks-list"></div>
+    </div>
+  </div>
+
+  <!-- ──────────── QUIZ SCREEN ──────────── -->
+  <div class="screen" id="screen-quiz">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-label" id="prog-label">Question 1 of 10</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="timer hidden" id="timer">⏱ 00:00</div>
+          <button class="bookmark-btn" id="bm-btn" onclick="toggleBookmark()" title="Bookmark">☆</button>
+        </div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:10%"></div></div>
+    </div>
+
+    <div class="quiz-card" id="quiz-card">
+      <div class="q-header">
+        <span class="q-badge" id="q-badge">Q1</span>
+        <span class="q-topic-tag" id="q-topic">Topic</span>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+      <div class="explanation hidden" id="q-explanation"></div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-outline" onclick="prevQ()" id="btn-prev">← Prev</button>
+      <button class="btn btn-primary" onclick="nextQ()" id="btn-next">Next →</button>
+    </div>
+    <div style="text-align:center;margin-top:12px">
+      <button class="btn btn-outline btn-sm" onclick="endQuiz()">End Quiz</button>
+    </div>
+  </div>
+
+  <!-- ──────────── SCORE SCREEN ──────────── -->
+  <div class="screen" id="screen-score">
+    <div class="score-card">
+      <div class="score-ring" id="score-ring">
+        <svg viewBox="0 0 120 120">
+          <circle class="score-bg" cx="60" cy="60" r="54"/>
+          <circle class="score-fg" id="score-arc" cx="60" cy="60" r="54"/>
+        </svg>
+        <div class="score-pct" id="score-pct">0%</div>
+        <div class="score-label">Score</div>
+      </div>
+      <div class="score-grade" id="score-grade"></div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-stats">
+        <div class="stat-box"><div class="stat-val" id="st-correct" style="color:var(--green)">0</div><div class="stat-lbl">Correct</div></div>
+        <div class="stat-box"><div class="stat-val" id="st-wrong" style="color:var(--red)">0</div><div class="stat-lbl">Wrong</div></div>
+        <div class="stat-box"><div class="stat-val" id="st-time" style="color:var(--cyan)">0s</div><div class="stat-lbl">Time</div></div>
+      </div>
+      <div class="score-actions">
+        <button class="btn btn-primary" onclick="reviewAnswers()">📋 Review Answers</button>
+        <button class="btn btn-outline" onclick="retryWrong()">🔄 Retry Wrong Questions</button>
+        <button class="btn btn-outline" onclick="goHome()">🏠 Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────────── REVIEW SCREEN ──────────── -->
+  <div class="screen" id="screen-review">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+      <div class="section-title" style="margin:0">Review Answers</div>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="pill active" id="rev-all" onclick="filterReview('all',this)">All</button>
+        <button class="pill" id="rev-wrong" onclick="filterReview('wrong',this)">❌ Wrong</button>
+        <button class="pill" id="rev-correct" onclick="filterReview('correct',this)">✅ Correct</button>
+      </div>
+    </div>
+    <div id="review-list"></div>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="goScore()">← Back to Score</button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading hidden" id="loading">
+    <div class="spinner"></div>
+    <div style="color:var(--muted);font-size:14px">Generating questions...</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA: All questions from PDF
+// ═══════════════════════════════════════════════
+const TOPICS = [
+  { id:'nano', name:'Nanochemistry', icon:'⚛️' },
+  { id:'charac', name:'Characterization', icon:'🔬' },
+  { id:'sep', name:'Separation & Purification', icon:'🧪' },
+  { id:'nomenclature', name:'Nomenclature', icon:'📝' },
+  { id:'hydrocarbons', name:'Hydrocarbons', icon:'⛽' },
+  { id:'functional', name:'Functional Groups', icon:'🔗' },
+  { id:'reactions', name:'Reactions', icon:'⚡' },
+  { id:'stereo', name:'Stereochemistry', icon:'🌀' },
+  { id:'hybridization', name:'Hybridization & Bonding', icon:'🔮' },
+  { id:'empirical', name:'Empirical & Molecular Formulae', icon:'📊' },
+  { id:'allotropes', name:'Carbon Allotropes', icon:'💎' },
+];
+
+const ALL_QUESTIONS = [
+// ── NANOCHEMISTRY ──
+{id:1,topic:'nano',q:"What is nanochemistry?",type:"mc",options:["The study of atoms larger than 1000 nm","The chemistry of materials and processes at the nanometer scale","A branch of inorganic chemistry only","The study of subatomic particles"],ans:1,exp:"Nanochemistry focuses on the synthesis, study, and application of materials at the nanometer scale (1–100 nm), combining chemistry, physics, and materials science."},
+{id:2,topic:'nano',q:"The size range of nanomaterials is generally:",type:"mc",options:["1–10 μm","1–100 nm","100–1000 nm","0.1–1 pm"],ans:1,exp:"Nanomaterials are defined as materials with at least one dimension between 1 and 100 nanometres."},
+{id:3,topic:'nano',q:"Which property of nanomaterials changes significantly due to their small size?",type:"mc",options:["Atomic number","Surface area-to-volume ratio","Isotopic mass","Nuclear charge"],ans:1,exp:"As size decreases to the nanoscale, the surface area-to-volume ratio increases dramatically, altering chemical, physical, and optical properties."},
+{id:4,topic:'nano',q:"Carbon nanotubes are primarily made of:",type:"mc",options:["Silicon","Carbon atoms arranged in a cylindrical graphene structure","Gold nanoparticles","Iron oxide"],ans:1,exp:"Carbon nanotubes (CNTs) are hollow cylinders of sp2-hybridized carbon atoms arranged in a hexagonal lattice (graphene sheet rolled up)."},
+{id:5,topic:'nano',q:"Which type of carbon nanotube consists of a single graphene cylinder?",type:"mc",options:["Multi-walled CNT","Double-walled CNT","Single-walled CNT","Armchair CNT"],ans:2,exp:"A Single-Walled Carbon Nanotube (SWCNT) consists of one seamless graphene cylinder, giving it unique electrical and mechanical properties."},
+{id:6,topic:'nano',q:"Multi-walled carbon nanotubes contain:",type:"mc",options:["A single graphene layer","Multiple concentric graphene cylinders","Randomly stacked graphene sheets","Only zigzag chirality"],ans:1,exp:"MWCNTs consist of multiple coaxial graphene cylinders nested within each other, with interlayer spacing of ~0.34 nm."},
+{id:7,topic:'nano',q:"What is a major application of carbon nanotubes?",type:"mc",options:["Food preservation","Drug delivery and reinforcing composites","Cooking fuel","Nuclear shielding"],ans:1,exp:"CNTs are used in drug delivery systems, composite materials (aerospace, sports), field-emission devices, and nanotube-based transistors."},
+{id:8,topic:'nano',q:"Nanostructures are materials with at least one dimension in the range of:",type:"mc",options:["1 mm – 1 cm","1 μm – 1 mm","1–100 nm","0.01–1 pm"],ans:2,exp:"By definition, nanostructures have at least one dimension measured in nanometres (1–100 nm)."},
+{id:9,topic:'nano',q:"Quantum dots are nanostructures known for their unique:",type:"mc",options:["Magnetic properties","Size-dependent optical and electronic properties","Radioactivity","Infinite conductivity"],ans:1,exp:"Quantum dots are semiconductor nanocrystals whose optical and electronic properties (especially fluorescence color) depend on their size due to quantum confinement."},
+{id:10,topic:'nano',q:"The increased reactivity of nanoparticles is mainly due to their:",type:"mc",options:["Greater atomic mass","Higher radioactivity","Increased surface area-to-volume ratio","Larger particle size"],ans:2,exp:"More surface atoms are exposed at the nanoscale, providing more active sites for chemical reactions, thereby increasing reactivity."},
+{id:11,topic:'nano',q:"Fullerenes are:",type:"mc",options:["Polymers of styrene","Spherical or cage-like carbon molecules (e.g. C₆₀)","Linear carbon chains","Branched diamond structures"],ans:1,exp:"Fullerenes are allotropes of carbon forming closed cages; the most famous is buckminsterfullerene (C₆₀, 'buckyball')."},
+{id:12,topic:'nano',q:"Which of the following is considered a zero-dimensional nanostructure?",type:"mc",options:["Carbon nanotube","Graphene sheet","Quantum dot / nanoparticle","Nanowire"],ans:2,exp:"Zero-dimensional (0D) nanostructures have all dimensions ≤100 nm — e.g. quantum dots and spherical nanoparticles."},
+{id:13,topic:'nano',q:"Nanowires are classified as:",type:"mc",options:["Zero-dimensional nanostructures","One-dimensional nanostructures","Two-dimensional nanostructures","Three-dimensional nanostructures"],ans:1,exp:"Nanowires have one dimension (length) much larger than the other two (both ≤100 nm), making them 1D nanostructures."},
+{id:14,topic:'nano',q:"Graphene is best described as:",type:"mc",options:["A 3D diamond lattice","A single atomic layer of carbon in a 2D hexagonal lattice","A polymer of carbon rings","A type of carbon nanotube"],ans:1,exp:"Graphene is a single layer of carbon atoms arranged in a 2D honeycomb (hexagonal) lattice — a 2D nanostructure."},
+{id:15,topic:'nano',q:"Which nanomaterial is widely used in sunscreens?",type:"mc",options:["Silver nanoparticles","Carbon nanotubes","Titanium dioxide (TiO₂) nanoparticles","Gold nanorods"],ans:2,exp:"TiO₂ nanoparticles are used in sunscreens because they absorb and scatter UV radiation while being transparent to visible light at the nanoscale."},
+{id:16,topic:'nano',q:"The exceptional strength of carbon nanotubes arises from:",type:"mc",options:["Ionic bonding between carbon atoms","sp3 hybridization forming sigma bonds only","Strong covalent C-C sp2 bonds in a hexagonal lattice","Van der Waals forces between layers"],ans:2,exp:"The C–C sp2 bonds within the graphene cylinder structure give CNTs their extraordinary tensile strength — estimated >100× that of steel."},
+{id:17,topic:'nano',q:"Which allotrope of carbon is used to form nanotubes?",type:"mc",options:["Diamond","Graphene","Lonsdaleite","Charcoal"],ans:1,exp:"Carbon nanotubes are essentially rolled-up sheets of graphene (a single-atom-thick layer of sp2-bonded carbon)."},
+{id:18,topic:'nano',q:"Which property makes silver nanoparticles useful as antimicrobial agents?",type:"mc",options:["High melting point","Optical band gap","Release of Ag⁺ ions that disrupt bacterial cell membranes","Magnetic susceptibility"],ans:2,exp:"Silver nanoparticles release Ag⁺ ions that interact with bacterial proteins and cell walls, causing oxidative stress and cell death."},
+{id:19,topic:'nano',q:"Which synthesis method is categorized as a 'top-down' nanofabrication technique?",type:"mc",options:["Chemical vapour deposition","Sol-gel synthesis","Lithography/ball milling","Self-assembly"],ans:2,exp:"Top-down approaches (lithography, ball milling, etching) break bulk material down to nanoscale, whereas bottom-up builds from atoms/molecules up."},
+{id:20,topic:'nano',q:"The term 'nano' represents a factor of:",type:"mc",options:["10⁻⁶","10⁻⁹","10⁻¹²","10⁻³"],ans:1,exp:"'Nano' is the SI prefix for 10⁻⁹. Therefore, 1 nanometre = 1 × 10⁻⁹ metres."},
+
+// ── CHARACTERIZATION ──
+{id:21,topic:'charac',q:"Which technique is primarily used to determine morphology and size of nanoparticles at very high resolution?",type:"mc",options:["NMR spectroscopy","Transmission Electron Microscopy (TEM)","UV-Vis spectroscopy","BET surface area analysis"],ans:1,exp:"TEM uses a beam of electrons transmitted through a thin sample to produce high-resolution images revealing morphology, size, and crystal structure of nanoparticles."},
+{id:22,topic:'charac',q:"The Scherrer equation is used in XRD to estimate:",type:"mc",options:["Particle charge","Crystallite size","Elemental composition","Surface area"],ans:1,exp:"The Scherrer equation (D = Kλ/β cosθ) relates XRD peak broadening to crystallite size — smaller crystallites give broader peaks."},
+{id:23,topic:'charac',q:"Dynamic Light Scattering (DLS) is primarily used to measure:",type:"mc",options:["Crystal structure","Hydrodynamic size and particle size distribution in suspension","Elemental composition","Thermal stability"],ans:1,exp:"DLS measures Brownian motion of particles in suspension and converts it via the Stokes-Einstein equation to hydrodynamic diameter."},
+{id:24,topic:'charac',q:"Zeta potential of nanoparticles is an indicator of:",type:"mc",options:["Crystal structure","Elemental purity","Colloidal stability — particles with |ζ| > 30 mV are stable","Melting temperature"],ans:2,exp:"High zeta potential (positive or negative) means strong electrostatic repulsion between particles, preventing aggregation and indicating good colloidal stability."},
+{id:25,topic:'charac',q:"Which technique provides information about surface functional groups on nanoparticles?",type:"mc",options:["TEM","XRD","FTIR spectroscopy","DLS"],ans:2,exp:"Fourier-Transform Infrared (FTIR) spectroscopy identifies characteristic absorption frequencies of functional groups (O-H, N-H, C=O, etc.) on particle surfaces."},
+{id:26,topic:'charac',q:"Surface area analysis of nanomaterials is commonly performed using:",type:"mc",options:["SEM-EDX","BET (Brunauer–Emmett–Teller) analysis","DLS","Zeta potential"],ans:1,exp:"BET analysis measures N₂ adsorption-desorption isotherms at liquid nitrogen temperature to calculate specific surface area (m² g⁻¹)."},
+{id:27,topic:'charac',q:"Scanning Electron Microscopy (SEM) primarily provides information about:",type:"mc",options:["Internal crystal lattice","Surface morphology and topography","Elemental valence states","Molecular vibrations"],ans:1,exp:"SEM scans the surface with focused electrons, producing secondary and backscattered electron images that reveal surface morphology, texture, and particle shape."},
+{id:28,topic:'charac',q:"Which technique is used to determine elemental composition attached to an SEM?",type:"mc",options:["FTIR","TGA","EDX (Energy Dispersive X-ray spectroscopy)","NMR"],ans:2,exp:"EDX (also called EDS) detects characteristic X-rays emitted when the electron beam hits the sample, identifying elements present and their approximate % composition."},
+{id:29,topic:'charac',q:"UV-Visible spectroscopy is often used to characterize metallic nanoparticles through:",type:"mc",options:["Molecular vibrations","Surface Plasmon Resonance (SPR) absorption peak","Crystallite size measurement","Particle charge"],ans:1,exp:"Metal nanoparticles (especially Ag and Au) display a localized Surface Plasmon Resonance (SPR) band in UV-Vis whose position and width indicate size and shape."},
+{id:30,topic:'charac',q:"Which analytical technique provides surface images at atomic resolution?",type:"mc",options:["SEM","DLS","Scanning Tunnelling Microscopy (STM) / AFM","UV-Vis"],ans:2,exp:"STM and AFM (Atomic Force Microscopy) can image surfaces at atomic/near-atomic resolution, providing three-dimensional topography at the nanoscale."},
+
+// ── SEPARATION & PURIFICATION ──
+{id:31,topic:'sep',q:"Which chromatography technique is most suitable for separating volatile organic compounds?",type:"mc",options:["Column chromatography","Thin-layer chromatography","Gas Chromatography (GC)","Paper chromatography"],ans:2,exp:"GC vaporizes the sample; components are separated in a column based on their boiling points and interaction with the stationary phase, detected by a detector."},
+{id:32,topic:'sep',q:"The Rf value in TLC is calculated as:",type:"mc",options:["Distance moved by solvent / distance moved by spot","Distance moved by spot / distance moved by solvent front","Mass of compound / volume of solvent","Boiling point / melting point"],ans:1,exp:"Rf = (Distance traveled by spot) ÷ (Distance traveled by solvent front). It ranges from 0 to 1 and is characteristic of a compound in a given system."},
+{id:33,topic:'sep',q:"If a spot travels 4.5 cm and the solvent front travels 9.0 cm, the Rf value is:",type:"mc",options:["0.25","2.0","0.50","4.5"],ans:2,exp:"Rf = 4.5 ÷ 9.0 = 0.50"},
+{id:34,topic:'sep',q:"A compound moves 3.2 cm from the origin while the solvent front moves 8.0 cm. The Rf value is:",type:"mc",options:["0.25","0.40","2.50","0.80"],ans:1,exp:"Rf = 3.2 ÷ 8.0 = 0.40"},
+{id:35,topic:'sep',q:"In TLC, the stationary phase is usually:",type:"mc",options:["A liquid solvent mixture","Silica gel or alumina on a plate","A solid polymer bead column","Filter paper"],ans:1,exp:"TLC uses a polar stationary phase (silica gel, SiO₂, or alumina, Al₂O₃) coated onto a glass, aluminium, or plastic plate."},
+{id:36,topic:'sep',q:"Simple distillation is most effective when the boiling point difference between two liquids is:",type:"mc",options:["Less than 5°C","About 10°C","Greater than 25°C","Equal to 0°C"],ans:2,exp:"Simple distillation works well when components differ by >25°C in boiling point; otherwise fractional distillation is needed for clean separation."},
+{id:37,topic:'sep',q:"Fractional distillation differs from simple distillation because it uses:",type:"mc",options:["Higher pressure","A fractionating column that allows multiple vaporisation-condensation cycles","Only one condensation step","No heat source"],ans:1,exp:"The fractionating column provides many theoretical plates (equilibrium stages), giving repeated partial vaporisation and condensation — separating close-boiling mixtures."},
+{id:38,topic:'sep',q:"Sublimation is most suitable for purifying compounds that:",type:"mc",options:["Are liquids at room temperature","Convert directly from solid to vapour without passing through the liquid state","Have very high boiling points","Are ionic compounds"],ans:1,exp:"Sublimation purifies solids (e.g. caffeine, iodine, naphthalene) that convert directly to vapour and re-solidify without melting, leaving impurities behind."},
+{id:39,topic:'sep',q:"Column chromatography separates compounds primarily based on:",type:"mc",options:["Boiling point only","Molecular mass only","Differential adsorption on the stationary phase (polarity interactions)","Radioactivity"],ans:2,exp:"In column chromatography, compounds interact differently with the polar stationary phase (silica/alumina); more polar compounds adsorb more strongly and elute slower."},
+{id:40,topic:'sep',q:"The Rf value of a compound can NEVER be:",type:"mc",options:["0.5","0.99","Greater than 1","0.01"],ans:2,exp:"Rf can only range from 0 (no movement) to a maximum of 1 (moved with the solvent front). A value >1 is mathematically impossible."},
+{id:41,topic:'sep',q:"Which solvent pair is commonly used in liquid-liquid extraction?",type:"mc",options:["Water and ethanol (miscible)","Water and diethyl ether (immiscible)","Hexane and pentane","Acetone and methanol"],ans:1,exp:"Liquid-liquid extraction requires two immiscible solvents (e.g. water + diethyl ether or dichloromethane) so compounds partition between layers based on solubility."},
+{id:42,topic:'sep',q:"Recrystallization is the process used to:",type:"mc",options:["Separate gases by boiling","Purify a solid by dissolving in hot solvent and allowing to crystallize on cooling","Analyze volatiles by GC","Separate enantiomers"],ans:1,exp:"Recrystallisation dissolves the impure solid in a minimum of hot solvent; on cooling, pure crystals precipitate while impurities remain in solution."},
+{id:43,topic:'sep',q:"IR spectroscopy is primarily used to identify:",type:"mc",options:["Molecular mass","Elemental composition","Functional groups via characteristic bond vibrations","Crystal structure"],ans:2,exp:"IR spectroscopy measures absorption of infrared radiation causing bond stretching/bending; characteristic frequencies (e.g. ~3300 cm⁻¹ for O-H, ~1700 cm⁻¹ for C=O) identify functional groups."},
+{id:44,topic:'sep',q:"NMR spectroscopy provides information about:",type:"mc",options:["Elemental mass","The number and environment of specific nuclei (e.g. ¹H, ¹³C) in a molecule","UV absorption wavelength","Surface area"],ans:1,exp:"NMR detects nuclei in different chemical environments (chemical shift), coupling patterns, and integration — giving connectivity and structural information."},
+{id:45,topic:'sep',q:"Mass spectrometry is primarily used to determine:",type:"mc",options:["Functional groups","Molecular mass and fragmentation pattern","Crystal lattice parameters","Surface morphology"],ans:1,exp:"Mass spec ionises molecules, then separates ions by mass-to-charge ratio (m/z). The molecular ion peak gives molecular mass; fragmentation reveals structural information."},
+
+// ── NOMENCLATURE ──
+{id:46,topic:'nomenclature',q:"The compound CH₃-CH₂-COOH is an example of a:",type:"mc",options:["Ketone","Aldehyde","Carboxylic acid","Ester"],ans:2,exp:"CH₃CH₂COOH is propanoic acid (a carboxylic acid). Carboxylic acids contain the –COOH (carboxyl) functional group."},
+{id:47,topic:'nomenclature',q:"The IUPAC name for CH₃-CH₂-CH₂-COOH is:",type:"mc",options:["Butanoic acid","Propanoic acid","Pentanoic acid","Ethanoic acid"],ans:0,exp:"CH₃CH₂CH₂COOH has 4 carbon atoms (including the carboxyl carbon), so it is butanoic acid."},
+{id:48,topic:'nomenclature',q:"The IUPAC name of CH₄ is:",type:"mc",options:["Methane","Ethane","Propane","Butane"],ans:0,exp:"CH₄ is methane — the simplest alkane with one carbon atom."},
+{id:49,topic:'nomenclature',q:"The compound C₆H₅-CH₃ is known as:",type:"mc",options:["Benzene","Toluene (methylbenzene)","Phenol","Cyclohexane"],ans:1,exp:"C₆H₅CH₃ is toluene, whose IUPAC name is methylbenzene — a benzene ring with one methyl substituent."},
+{id:50,topic:'nomenclature',q:"The IUPAC name for CH₃-CH₂-CH₂-NH₂ is:",type:"mc",options:["Propylamine","Propan-1-amine","Ethylamine","Butan-1-amine"],ans:1,exp:"A 3-carbon chain with –NH₂ at carbon 1 = propan-1-amine (also called n-propylamine)."},
+{id:51,topic:'nomenclature',q:"The alkene CH₂=CH-CH₃ is named:",type:"mc",options:["Propane","But-1-ene","Prop-1-ene","Ethene"],ans:2,exp:"CH₂=CH-CH₃ has three carbons with a double bond at position 1: prop-1-ene (also known as propene)."},
+{id:52,topic:'nomenclature',q:"The IUPAC name for C₆H₅Cl is:",type:"mc",options:["Chloroethane","Chlorobenzene","Benzyl chloride","Phenyl chloride"],ans:1,exp:"C₆H₅Cl is chlorobenzene — a benzene ring with one chlorine substituent. IUPAC: chlorobenzene."},
+{id:53,topic:'nomenclature',q:"The IUPAC name of CH₃COOH is:",type:"mc",options:["Methanoic acid","Propanoic acid","Ethanoic acid","Butanoic acid"],ans:2,exp:"CH₃COOH has two carbons total: ethanoic acid (commonly known as acetic acid)."},
+{id:54,topic:'nomenclature',q:"The IUPAC name of CH₃OH is:",type:"mc",options:["Ethanol","Propanol","Methanol","Butanol"],ans:2,exp:"CH₃OH has one carbon with an –OH group: methanol (methyl alcohol)."},
+{id:55,topic:'nomenclature',q:"The IUPAC name for the benzene derivative C₆H₅CHO is:",type:"mc",options:["Benzaldehyde","Phenol","Benzyl alcohol","Toluene"],ans:0,exp:"C₆H₅CHO is benzaldehyde — a benzene ring attached to an aldehyde (–CHO) group."},
+{id:56,topic:'nomenclature',q:"The IUPAC name of CH₃COOC₂H₅ is:",type:"mc",options:["Ethyl propanoate","Methyl ethanoate","Ethyl ethanoate","Propyl methanoate"],ans:2,exp:"CH₃COOC₂H₅: the acid part is ethanoic acid (CH₃CO–) and the alcohol part is ethanol (–OC₂H₅) → ethyl ethanoate."},
+{id:57,topic:'nomenclature',q:"The IUPAC name for CH₃CH₂CH₂CHClCH₃ is:",type:"mc",options:["2-chloropentane","3-chloropentane","1-chloropentane","2-chlorobutane"],ans:0,exp:"5-carbon chain with Cl at C2: 2-chloropentane. Number from the end that gives the substituent the lowest locant."},
+{id:58,topic:'nomenclature',q:"The suffix '-ene' in an IUPAC name indicates the presence of:",type:"mc",options:["A triple bond","A carbonyl group","A carbon-carbon double bond","An amino group"],ans:2,exp:"'-ene' is the IUPAC suffix for a C=C double bond (alkenes). '-yne' = triple bond, '-ane' = only single bonds, '-ol' = alcohol."},
+{id:59,topic:'nomenclature',q:"The suffix '-one' in an IUPAC name indicates the presence of:",type:"mc",options:["An alcohol group","A ketone (C=O) group","An amine","An ether"],ans:1,exp:"'-one' denotes a ketone: a carbonyl group (C=O) with two carbon-containing groups attached (not at the end of the chain)."},
+{id:60,topic:'nomenclature',q:"The IUPAC name for the benzene derivative C₆H₅NH₂ is:",type:"mc",options:["Aniline / benzenamine","Phenol","Benzaldehyde","Nitrobenzene"],ans:0,exp:"C₆H₅NH₂ is aniline (systematic IUPAC: benzenamine or aminobenzene) — benzene with an –NH₂ substituent."},
+
+// ── HYDROCARBONS ──
+{id:61,topic:'hydrocarbons',q:"A hydrocarbon with the general formula CₙH₂ₙ₊₂ is known as an:",type:"mc",options:["Alkene","Alkyne","Alkane","Arene"],ans:2,exp:"The general formula CₙH₂ₙ₊₂ represents saturated hydrocarbons — alkanes (no double or triple bonds)."},
+{id:62,topic:'hydrocarbons',q:"The general formula CₙH₂ₙ represents:",type:"mc",options:["Alkanes","Alkynes","Alkenes (non-cyclic)","Arenes"],ans:2,exp:"CₙH₂ₙ is the general formula for non-cyclic alkenes — they have one degree of unsaturation (one C=C double bond)."},
+{id:63,topic:'hydrocarbons',q:"The general formula for alkynes is:",type:"mc",options:["CₙH₂ₙ₊₂","CₙH₂ₙ","CₙH₂ₙ₋₂","CₙH₂ₙ₋₆"],ans:2,exp:"Alkynes (one triple bond) follow CₙH₂ₙ₋₂ — each degree of unsaturation removes two H atoms from the alkane formula."},
+{id:64,topic:'hydrocarbons',q:"The molecular formula of an alkane containing four carbon atoms is:",type:"mc",options:["C₄H₈","C₄H₁₀","C₄H₆","C₄H₁₂"],ans:1,exp:"For alkanes: CₙH₂ₙ₊₂. With n=4: C₄H₂(4)+2 = C₄H₁₀ (butane)."},
+{id:65,topic:'hydrocarbons',q:"What is the number of hydrogen atoms a decane must possess?",type:"mc",options:["20","22","24","18"],ans:1,exp:"Decane: n=10, CₙH₂ₙ₊₂ = C₁₀H₂₂. So 22 hydrogen atoms."},
+{id:66,topic:'hydrocarbons',q:"An alkane with 6 carbon atoms will have how many hydrogen atoms?",type:"mc",options:["12","14","16","18"],ans:1,exp:"Hexane: n=6, CₙH₂ₙ₊₂ = C₆H₁₄. So 14 hydrogen atoms."},
+{id:67,topic:'hydrocarbons',q:"The first member of the alkyne homologous series is:",type:"mc",options:["Ethyne","Propyne","Methyne","Butyne"],ans:0,exp:"The simplest alkyne is ethyne (HC≡CH, also called acetylene) — 2 carbons with a triple bond. Methyne (1 carbon) cannot form a triple bond."},
+{id:68,topic:'hydrocarbons',q:"The IUPAC name for acetylene is:",type:"mc",options:["Ethene","Ethane","Ethyne","Propyne"],ans:2,exp:"Acetylene (HC≡CH) is systematically named ethyne — two carbon atoms connected by a triple bond."},
+{id:69,topic:'hydrocarbons',q:"The main component of natural gas is:",type:"mc",options:["Propane","Butane","Methane","Ethane"],ans:2,exp:"Natural gas is predominantly methane (CH₄, typically 70–90%), with smaller amounts of ethane, propane, and other hydrocarbons."},
+{id:70,topic:'hydrocarbons',q:"The main constituents of petrol (gasoline) are:",type:"mc",options:["Methane and ethane","C5–C10 alkanes (e.g. heptane, octane)","Ethanol only","Long-chain alkanes C20+"],ans:1,exp:"Petrol contains mostly C5–C10 hydrocarbons — alkanes, cycloalkanes, and some aromatics with suitable volatility and energy content."},
+{id:71,topic:'hydrocarbons',q:"The hydrocarbon in which all four valencies of carbon are fully occupied with single bonds is called:",type:"mc",options:["Alkene","Alkyne","Alkane (saturated hydrocarbon)","Arene"],ans:2,exp:"Alkanes are saturated hydrocarbons — all four carbon valencies are occupied by single C-H or C-C sigma bonds with no double or triple bonds."},
+{id:72,topic:'hydrocarbons',q:"Benzene has how many carbon atoms?",type:"mc",options:["5","6","7","8"],ans:1,exp:"Benzene (C₆H₆) has 6 carbon atoms arranged in a planar hexagonal ring with delocalized π electrons."},
+{id:73,topic:'hydrocarbons',q:"Which organic compound is used in oxy-acetylene welding and cutting of metals?",type:"mc",options:["Ethene","Methane","Ethyne (acetylene)","Propene"],ans:2,exp:"Acetylene (ethyne) burns with oxygen producing a flame >3000°C — hot enough to melt/cut steel in oxy-acetylene welding torches."},
+{id:74,topic:'hydrocarbons',q:"The four main classes of hydrocarbons include:",type:"mc",options:["Acids, alcohols, esters, ethers","Alkanes, alkenes, alkynes, arenes","Amines, amides, ketones, aldehydes","Sugars, proteins, lipids, nucleic acids"],ans:1,exp:"Hydrocarbons contain only C and H and are classified as: alkanes (σ bonds only), alkenes (one C=C), alkynes (one C≡C), and arenes (aromatic benzene ring)."},
+{id:75,topic:'hydrocarbons',q:"Consecutive members of the alkyne homologous series differ by:",type:"mc",options:["CH₂","C₂H₄","CH₄","C₂H₂"],ans:0,exp:"Like all homologous series, consecutive alkynes (and all hydrocarbons) differ by one –CH₂– unit (molecular mass difference of 14 u)."},
+
+// ── FUNCTIONAL GROUPS ──
+{id:76,topic:'functional',q:"The functional group –CHO is characteristic of a(n):",type:"mc",options:["Ketone","Alcohol","Aldehyde","Ester"],ans:2,exp:"The –CHO group (carbonyl at the end of a chain) is the aldehyde functional group. Named with suffix '-al' in IUPAC nomenclature."},
+{id:77,topic:'functional',q:"The functional group –NH₂ is characteristic of:",type:"mc",options:["Amides","Amines","Nitro compounds","Alcohols"],ans:1,exp:"–NH₂ is the amino group, characteristic of amines. Amides contain –CONH₂ (amino attached to a carbonyl)."},
+{id:78,topic:'functional',q:"The functional group of alcohols is:",type:"mc",options:["–COOH","–CHO","–OH (hydroxyl)","–NH₂"],ans:2,exp:"Alcohols contain the –OH (hydroxyl) functional group attached to a saturated carbon atom."},
+{id:79,topic:'functional',q:"The functional group of carboxylic acids is:",type:"mc",options:["–OH","–CHO","–COOH (carboxyl)","C=O only"],ans:2,exp:"Carboxylic acids contain the –COOH carboxyl group, which is a combination of a carbonyl (C=O) and a hydroxyl (–OH) group."},
+{id:80,topic:'functional',q:"The functional group of ketones is:",type:"mc",options:["–CHO","–COOH","C=O (carbonyl) between two carbon groups","–OH"],ans:2,exp:"Ketones have a carbonyl group (C=O) with a carbon substituent on each side — not at a terminal position."},
+{id:81,topic:'functional',q:"The functional group of esters is:",type:"mc",options:["–COOH","–COO– (ester linkage, –C(=O)O–)","–CHO","–NH₂"],ans:1,exp:"Esters contain the –COO– group formed by condensation of a carboxylic acid and an alcohol with loss of water."},
+{id:82,topic:'functional',q:"The functional group of ethers is:",type:"mc",options:["–OH","–COO–","–O– (ether linkage, R-O-R')","–CHO"],ans:2,exp:"Ethers contain an oxygen atom bonded to two carbon groups (R-O-R'); they lack the O-H of alcohols and C=O of carbonyls."},
+{id:83,topic:'functional',q:"Which functional group has a pleasant smell?",type:"mc",options:["Thiols","Amines","Esters","Carboxylic acids"],ans:2,exp:"Esters (–COO–) are responsible for the fruity and sweet aromas of many fruits and are used as flavourings and perfumes."},
+{id:84,topic:'functional',q:"Which functional group is known to have a very offensive odour?",type:"mc",options:["Esters","Alcohols","Thiols (–SH)","Alkanes"],ans:2,exp:"Thiols (R-SH) have extremely pungent, unpleasant odours (like garlic and skunks). The –SH group is the sulfur analogue of –OH."},
+{id:85,topic:'functional',q:"The reaction between an alcohol and a carboxylic acid to form an ester is called:",type:"mc",options:["Saponification","Esterification","Hydrolysis","Oxidation"],ans:1,exp:"Esterification: R-COOH + HO-R' ⇌ R-COO-R' + H₂O. It is catalysed by strong acid (H₂SO₄) and is reversible."},
+{id:86,topic:'functional',q:"The functional group of amines is:",type:"mc",options:["–COOH","–CHO","–NH₂","–OH"],ans:2,exp:"Amines contain the amino group (–NH₂ for primary, –NHR for secondary, –NR₂ for tertiary) derived from ammonia by replacing H with alkyl/aryl groups."},
+{id:87,topic:'functional',q:"Methanal is an example of:",type:"mc",options:["A ketone","An aldehyde","A carboxylic acid","An ether"],ans:1,exp:"Methanal (HCHO, formaldehyde) is the simplest aldehyde — the carbonyl carbon bears at least one hydrogen atom."},
+{id:88,topic:'functional',q:"Butanone is an example of which functional group?",type:"mc",options:["Aldehyde","Ketone","Ester","Amine"],ans:1,exp:"Butanone (CH₃COCH₂CH₃, also called methyl ethyl ketone/MEK) is a ketone — the C=O group is between two carbon substituents."},
+{id:89,topic:'functional',q:"The suffix of alcohols is:",type:"mc",options:["-al","-one","-ol","-ic acid"],ans:2,exp:"Alcohols end in '-ol' in IUPAC nomenclature (e.g., methanol, ethanol, propan-1-ol)."},
+{id:90,topic:'functional',q:"The suffix of aldehydes is:",type:"mc",options:["-ol","-al","-one","-oate"],ans:1,exp:"Aldehydes end in '-al' in IUPAC nomenclature (e.g., methanal, ethanal, propanal). The C=O is always at C1."},
+
+// ── REACTIONS ──
+{id:91,topic:'reactions',q:"The type of reaction that takes place between propene and a halogen is called:",type:"mc",options:["Substitution","Elimination","Electrophilic addition","Nucleophilic addition"],ans:2,exp:"Alkenes undergo electrophilic addition reactions with halogens (X₂); the π electrons of C=C act as nucleophile attacking the electrophilic halogen molecule."},
+{id:92,topic:'reactions',q:"The reaction between alkanes and halogens (in UV light) is:",type:"mc",options:["Electrophilic addition","Free radical substitution","Nucleophilic substitution","Elimination"],ans:1,exp:"Alkanes react with halogens via free radical chain mechanism (initiation/propagation/termination) initiated by UV light or heat."},
+{id:93,topic:'reactions',q:"Catalytic hydrogenation of alkenes produces:",type:"mc",options:["Alkenes with more carbons","Alkanes (saturated hydrocarbons)","Alkynes","Alcohols"],ans:1,exp:"H₂ adds across the C=C double bond in the presence of a catalyst (Ni, Pd, Pt): alkene → alkane. This is catalytic hydrogenation."},
+{id:94,topic:'reactions',q:"What does the complete combustion of hydrocarbons always yield?",type:"mc",options:["CO + H₂O","CO₂ + H₂O","C + H₂O","CO₂ + H₂"],ans:1,exp:"Complete combustion with excess oxygen: CₓHᵧ + O₂ → CO₂ + H₂O. Incomplete combustion gives CO or C (soot) instead of CO₂."},
+{id:95,topic:'reactions',q:"CH₂Cl₂ + Cl₂ → HCl + CHCl₃. This reaction illustrates:",type:"mc",options:["Addition reaction","Free radical substitution","Elimination reaction","Esterification"],ans:1,exp:"This is halogenation by free radical substitution — one H is replaced by Cl, releasing HCl as a by-product."},
+{id:96,topic:'reactions',q:"The bromination of propene gives:",type:"mc",options:["1,2-dibromopropane","1,3-dibromopropane","3-bromopropane","Propyl bromide"],ans:0,exp:"Br₂ adds across the double bond of propene (CH₂=CHCH₃) → 1,2-dibromopropane (CH₂BrCHBrCH₃) via electrophilic addition (anti addition)."},
+{id:97,topic:'reactions',q:"The catalytic hydrogenation of an alkyne in the presence of Lindlar's catalyst gives:",type:"mc",options:["An alkane","A trans-alkene","A cis-alkene","An alcohol"],ans:2,exp:"Lindlar's catalyst (Pd on CaCO₃ + lead acetate + quinoline) deactivates Pd, allowing only cis partial hydrogenation: alkyne → cis (Z)-alkene."},
+{id:98,topic:'reactions',q:"The catalytic hydrogenation of an alkyne in the presence of sodium in liquid ammonia gives:",type:"mc",options:["Cis-alkene","Trans-alkene","Alkane","Alcohol"],ans:1,exp:"Birch (dissolving metal) reduction with Na/NH₃(l) gives trans (E)-alkene from internal alkynes via a radical anion mechanism."},
+{id:99,topic:'reactions',q:"Propene undergoes mainly addition because it is an:",type:"mc",options:["Aromatic compound","Saturated hydrocarbon","Unsaturated compound (contains C=C)","Ionic compound"],ans:2,exp:"The π bond in alkenes makes them electron-rich and reactive toward electrophiles via addition, which breaks the π bond and saturates the carbons."},
+{id:100,topic:'reactions',q:"The reaction between pent-2-yne and bromine is what type of reaction?",type:"mc",options:["Substitution","Electrophilic addition","Nucleophilic substitution","Free radical"],ans:1,exp:"Alkynes, like alkenes, undergo electrophilic addition with halogens (Br₂), first giving a dibromoalkene then a tetrabromoalkane."},
+
+// ── STEREOCHEMISTRY ──
+{id:101,topic:'stereo',q:"Compounds which have different arrangements of atoms in space while having same atoms bonded to each other are said to have:",type:"mc",options:["Constitutional isomerism","Stereoisomerism","Tautomerism","Conformational isomerism"],ans:1,exp:"Stereoisomers have the same connectivity (same bonds) but different spatial arrangements — they cannot be interconverted without breaking bonds."},
+{id:102,topic:'stereo',q:"Chiral molecules which are non-superimposable mirror images of each other are called:",type:"mc",options:["Diastereomers","Meso compounds","Enantiomers","Constitutional isomers"],ans:2,exp:"Enantiomers are non-superimposable mirror images — like left and right hands. They differ in their effect on plane-polarised light (one is R, the other S)."},
+{id:103,topic:'stereo',q:"The ability of a compound to rotate a plane of polarised light is known as:",type:"mc",options:["Chirality","Optical activity","Aromaticity","Resonance"],ans:1,exp:"Optical activity is the rotation of plane-polarised light by chiral compounds. Dextrorotatory (+) rotates clockwise; levorotatory (–) rotates anticlockwise."},
+{id:104,topic:'stereo',q:"If the rotation of the plane is clockwise, the substance is:",type:"mc",options:["Levorotatory (-)","Achiral","Dextrorotatory (+)","Meso"],ans:2,exp:"Dextrorotatory (+) compounds rotate polarised light clockwise (to the right). Levorotatory (−) compounds rotate it counterclockwise."},
+{id:105,topic:'stereo',q:"Diastereomers are:",type:"mc",options:["Mirror images of each other","Identical compounds","Stereoisomers that are NOT mirror images of each other","Constitutional isomers"],ans:2,exp:"Diastereomers are stereoisomers that are not enantiomers — they are not non-superimposable mirror images and have different physical properties."},
+{id:106,topic:'stereo',q:"The plane which divides a molecule into two equal halves, each being the mirror image of the other, is called:",type:"mc",options:["Chiral centre","Plane of symmetry (σ plane)","Axis of symmetry","Centre of inversion"],ans:1,exp:"A plane of symmetry (mirror plane) makes a molecule achiral — the molecule is superimposable on its mirror image and is optically inactive."},
+{id:107,topic:'stereo',q:"When a molecule has a plane of symmetry, it will be:",type:"mc",options:["Chiral and optically active","Achiral and optically inactive","A diastereomer","An enantiomer"],ans:1,exp:"Molecules with a plane of symmetry are achiral (meso or symmetric) and do not rotate plane-polarised light — they are optically inactive."},
+{id:108,topic:'stereo',q:"The total number of stereoisomers possible for 2,3-dichlorobutane is:",type:"mc",options:["4","2","3","6"],ans:2,exp:"2,3-dichlorobutane: 2 chiral centres → max 2² = 4, but one pair forms a meso compound, reducing total to 3 stereoisomers (RR, SS, and meso)."},
+{id:109,topic:'stereo',q:"The separation of a racemic mixture into pure enantiomers is termed as:",type:"mc",options:["Crystallisation","Resolution","Racemisation","Distillation"],ans:1,exp:"Resolution separates a racemic mixture (50:50 enantiomers) into pure enantiomers, usually by forming diastereomeric salts with a chiral resolving agent, then separating."},
+{id:110,topic:'stereo',q:"The carbon atoms in ethyne (HC≡CH) are hybridized as:",type:"mc",options:["sp³","sp²","sp","sp³d"],ans:2,exp:"In ethyne, each carbon forms 2 sigma bonds (one C-C, one C-H) and 2 pi bonds (the triple bond): 2 sigma bonds → sp hybridization, linear geometry, 180°."},
+
+// ── HYBRIDIZATION & BONDING ──
+{id:111,topic:'hybridization',q:"The bond angle and shape of sp² hybridization are:",type:"mc",options:["109.5°, tetrahedral","180°, linear","120°, trigonal planar","90°, octahedral"],ans:2,exp:"sp² hybridization uses three orbitals (one s + two p) forming three sigma bonds at 120° in a trigonal planar geometry. One unhybridized p orbital forms the π bond."},
+{id:112,topic:'hybridization',q:"The shape and bond angle in sp hybridization are:",type:"mc",options:["Tetrahedral, 109.5°","Trigonal planar, 120°","Linear, 180°","Bent, 104.5°"],ans:2,exp:"sp hybridization (two groups/bonds): linear geometry with 180° bond angles (e.g., CO₂, alkynes, BeCl₂)."},
+{id:113,topic:'hybridization',q:"The hybridization around CH₄ is:",type:"mc",options:["sp","sp²","sp³","sp³d"],ans:2,exp:"Carbon in methane forms 4 single bonds; 4 equivalent sigma bonds require sp³ hybridization → tetrahedral geometry, 109.5° bond angle."},
+{id:114,topic:'hybridization',q:"The hybridization of carbon atoms in alkanes is:",type:"mc",options:["sp","sp²","sp³","sp³d²"],ans:2,exp:"All carbons in alkanes form 4 single bonds (no multiple bonds) → sp³ hybridization, tetrahedral geometry, 109.5° angles."},
+{id:115,topic:'hybridization',q:"The hybridization of each carbon in ethene (CH₂=CH₂) is:",type:"mc",options:["sp","sp²","sp³","sp³d"],ans:1,exp:"Each carbon in ethene forms 3 sigma bonds (2 C-H, 1 C-C) and participates in one pi bond → sp² hybridized, trigonal planar, 120°."},
+{id:116,topic:'hybridization',q:"A triple bond consists of what types of bonds?",type:"mc",options:["Three sigma bonds","One sigma and two pi bonds","Two sigma and one pi bond","Three pi bonds"],ans:1,exp:"A triple bond = 1 sigma (head-on orbital overlap) + 2 pi bonds (sideways p-orbital overlap). The sigma bond is strongest."},
+{id:117,topic:'hybridization',q:"Pi (π) bonds are formed as a result of:",type:"mc",options:["Head-on overlap of orbitals","Sideways (lateral) overlap of parallel p orbitals","Ionic interaction","Metallic bonding"],ans:1,exp:"Pi bonds form by lateral (side-by-side) overlap of unhybridized p orbitals. They are weaker than sigma bonds and are found in double and triple bonds."},
+{id:118,topic:'hybridization',q:"In comparing C=C (double bond) to C-C (single bond), the double bond is:",type:"mc",options:["Weaker and longer","Stronger and shorter","Weaker and shorter","Stronger and longer"],ans:1,exp:"Double bonds are stronger (have higher bond energy) and shorter than single bonds — the extra pi bond adds electron density between nuclei pulling them closer."},
+{id:119,topic:'hybridization',q:"The hybridization of carbon atoms in propane (C₃H₈) is:",type:"mc",options:["sp","sp²","sp³","Mixed sp² and sp³"],ans:2,exp:"Propane is an alkane — all C-C and C-H bonds are single bonds → all carbons are sp³ hybridized, tetrahedral geometry."},
+{id:120,topic:'hybridization',q:"The molecular geometry of SO₂ is:",type:"mc",options:["Linear","Trigonal planar","Bent (V-shaped)","Tetrahedral"],ans:2,exp:"SO₂: S has 2 bonding domains + 1 lone pair → sp² hybridized, but bent (V-shaped) molecular geometry with ~119° bond angle due to lone pair repulsion."},
+
+// ── EMPIRICAL & MOLECULAR FORMULAE ──
+{id:121,topic:'empirical',q:"An organic compound contains 52.2% C, 13.1% H and 34.7% O. What is the empirical formula? [H=1, C=12, O=16]",type:"mc",options:["CH₃O","C₂H₆O","CH₂O","C₂H₄O"],ans:1,exp:"C: 52.2/12=4.35; H: 13.1/1=13.1; O: 34.7/16=2.17. Divide by smallest (2.17): C=2, H=6, O=1 → empirical formula C₂H₆O."},
+{id:122,topic:'empirical',q:"A compound G has: C 66.7%, H 11.1%, rest is O, vapour density 36. What is its molecular formula?",type:"mc",options:["C₂H₄O","C₄H₈O₂","C₂H₆O","C₃H₆O₂"],ans:2,exp:"O=22.2%. C:66.7/12=5.56, H:11.1/1=11.1, O:22.2/16=1.39. Ratio→C4:H8:O1. EF=C₄H₈O, EF mass=72. Mr=2×36=72. MF=C₄H₈O."},
+{id:123,topic:'empirical',q:"Analysis of a 12.04 g sample (C, H, N) showed: 7.34 g C, 1.85 g H, 2.85 g N. What is the % N?",type:"mc",options:["23.7%","28.5%","15.4%","61.0%"],ans:0,exp:"%N = (2.85/12.04)×100 = 23.7%. (%C=61.0%, %H=15.4%, %N=23.7%, total≈100%)."},
+{id:124,topic:'empirical',q:"A 24.81 g sample (C, O, Cl): 3.01 g C, 4.00 g O, 17.81 g Cl. What is %Cl?",type:"mc",options:["12.1%","71.8%","16.1%","48.6%"],ans:1,exp:"%Cl = (17.81/24.81)×100 = 71.8%. %C=12.1%, %O=16.1%."},
+{id:125,topic:'empirical',q:"The term used when two or more compounds have the same molecular formula but different structural formulas is:",type:"mc",options:["Allotropy","Isomerism","Polymerism","Resonance"],ans:1,exp:"Isomerism: compounds with the same molecular formula but different structural formulas (constitutional isomers) or spatial arrangements (stereoisomers)."},
+{id:126,topic:'empirical',q:"Which formula shows the simplest ratio of different atoms present in a compound?",type:"mc",options:["Molecular formula","Structural formula","Empirical formula","Stereochemical formula"],ans:2,exp:"The empirical formula gives the simplest whole-number ratio of atoms (e.g. glucose C₆H₁₂O₆ has empirical formula CH₂O)."},
+{id:127,topic:'empirical',q:"Which formula shows the actual number of different atoms present in a compound?",type:"mc",options:["Empirical formula","Structural formula","Molecular formula","Condensed formula"],ans:2,exp:"The molecular formula gives the actual (true) number of each type of atom (e.g. glucose = C₆H₁₂O₆)."},
+{id:128,topic:'empirical',q:"Which formula shows the spatial arrangement of the atoms in a compound?",type:"mc",options:["Molecular formula","Empirical formula","Stereochemical / 3D structural formula","Condensed formula"],ans:2,exp:"Stereochemical or three-dimensional structural formulas (wedge-dash, Fischer projections) show the spatial arrangement of atoms in space."},
+{id:129,topic:'empirical',q:"What is the molecular formula of butane (4 carbon alkane)?",type:"mc",options:["C₄H₈","C₄H₁₀","C₄H₁₂","C₄H₆"],ans:1,exp:"Butane: CₙH₂ₙ₊₂ with n=4 → C₄H₂(4)+2 = C₄H₁₀."},
+{id:130,topic:'empirical',q:"How many structural isomers can be drawn for the molecular formula C₃H₈O?",type:"mc",options:["2","3","4","5"],ans:1,exp:"C₃H₈O has 3 structural isomers: propan-1-ol (CH₃CH₂CH₂OH), propan-2-ol (CH₃CHOHCH₃), and methoxyethane (CH₃OCH₂CH₃ — an ether)."},
+
+// ── CARBON ALLOTROPES ──
+{id:131,topic:'allotropes',q:"Allotropy is:",type:"mc",options:["The ability to form ions","The existence of an element in two or more different physical forms (allotropes) in the same physical state","The formation of polymers","Isotopic variation"],ans:1,exp:"Allotropy is the property of an element to exist in multiple structural forms (allotropes) in the same physical state, with different physical and chemical properties."},
+{id:132,topic:'allotropes',q:"Which allotrope of carbon is linked to nanotechnology?",type:"mc",options:["Diamond","Graphite","Fullerene (buckyballs) and carbon nanotubes","Lonsdaleite"],ans:2,exp:"Fullerenes (C₆₀, C₇₀), carbon nanotubes, and graphene are the carbon allotropes central to nanochemistry and nanotechnology applications."},
+{id:133,topic:'allotropes',q:"Fullerene was discovered in the year:",type:"mc",options:["1961","1985","1970","1991"],ans:1,exp:"Buckminsterfullerene (C₆₀) was discovered in 1985 by Kroto, Curl, and Smalley, who received the 1996 Nobel Prize in Chemistry."},
+{id:134,topic:'allotropes',q:"Who discovered fullerene?",type:"mc",options:["Linus Pauling","Kroto, Curl, and Smalley","Watson and Crick","Rutherford and Bohr"],ans:1,exp:"Harold Kroto, Robert Curl, and Richard Smalley discovered fullerene (C₆₀) in 1985 using laser vaporisation of graphite. They shared the 1996 Nobel Prize in Chemistry."},
+{id:135,topic:'allotropes',q:"A fullerene is:",type:"mc",options:["A polymer of ethylene","A molecule formed entirely from carbon atoms (allotrope of carbon)","An ionic crystal","A type of clay mineral"],ans:1,exp:"Fullerenes are cage-like carbon allotropes made purely of carbon atoms, forming spheres (C₆₀), ellipsoids, or tubes. Another name is 'buckyballs'."},
+{id:136,topic:'allotropes',q:"Tubes of fullerenes are called:",type:"mc",options:["Graphene","Lonsdaleite","Carbon nanotubes","Diamond cubic"],ans:2,exp:"Carbon nanotubes are hollow cylindrical fullerene tubes — essentially a graphene sheet rolled into a seamless cylinder."},
+{id:137,topic:'allotropes',q:"Graphite was named by __________ in the year ________:",type:"mc",options:["Lavoisier in 1799","Abraham Gottlob Werner in 1789","Humphry Davy in 1810","Berzelius in 1825"],ans:1,exp:"The name 'graphite' was coined by German geologist Abraham Gottlob Werner in 1789, from the Greek word 'graphein' (to write/draw)."},
+{id:138,topic:'allotropes',q:"Diamond is a __________ allotrope of __________:",type:"mc",options:["Metallic allotrope of silicon","Covalent network allotrope of carbon","Molecular allotrope of nitrogen","Ionic allotrope of boron"],ans:1,exp:"Diamond is a covalent network solid allotrope of carbon — each carbon is sp³ hybridized, bonded tetrahedrally to four other carbons, giving extraordinary hardness."},
+{id:139,topic:'allotropes',q:"Lonsdaleite was identified in the year:",type:"mc",options:["1967","1985","1952","2004"],ans:0,exp:"Lonsdaleite (hexagonal diamond) was first identified in 1967 in meteorite impact craters. It was named in honour of Dame Kathleen Lonsdale."},
+{id:140,topic:'allotropes',q:"Friedrick Wöhler obtained urea from the dehydration of ammonium cyanate in the year:",type:"mc",options:["1828","1900","1783","1856"],ans:0,exp:"In 1828, Friedrich Wöhler synthesised urea (an organic compound) from ammonium cyanate (inorganic) — disproving vitalism and founding modern organic chemistry."},
+];
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let state = {
+  mode: 'practice',
+  count: 10,
+  selectedTopics: TOPICS.map(t => t.id),
+  questions: [],
+  current: 0,
+  answers: {},
+  bookmarks: new Set(JSON.parse(localStorage.getItem('chm_bookmarks') || '[]')),
+  startTime: null,
+  timerInterval: null,
+  elapsedSeconds: 0,
+  examTimeLeft: 0,
+  examTimerInterval: null,
+};
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+function init() {
+  buildTopicGrid();
+  updateStartMeta();
+  renderBookmarksSection();
+}
+
+function buildTopicGrid() {
+  const grid = document.getElementById('topic-grid');
+  const counts = {};
+  TOPICS.forEach(t => { counts[t.id] = ALL_QUESTIONS.filter(q => q.topic === t.id).length; });
+  grid.innerHTML = TOPICS.map(t => `
+    <div class="topic-card active" data-id="${t.id}" onclick="toggleTopic(this,'${t.id}')">
+      <div class="topic-icon">${t.icon}</div>
+      <div class="topic-name">${t.name}</div>
+      <div class="topic-count">${counts[t.id]} Qs</div>
+    </div>`).join('');
+}
+
+function toggleTopic(el, id) {
+  el.classList.toggle('active');
+  if (el.classList.contains('active')) {
+    if (!state.selectedTopics.includes(id)) state.selectedTopics.push(id);
+  } else {
+    state.selectedTopics = state.selectedTopics.filter(t => t !== id);
+  }
+  updateStartMeta();
+}
+
+function updateStartMeta() {
+  const pool = ALL_QUESTIONS.filter(q => state.selectedTopics.includes(q.topic));
+  const total = state.count === 'all' ? pool.length : Math.min(parseInt(state.count)||10, pool.length);
+  const modeLabel = {practice:'📚 Practice', exam:'⏱ Exam', review:'🔍 Review'}[state.mode];
+  const time = state.mode === 'exam' ? `${total} min` : 'No limit';
+  document.getElementById('start-meta').innerHTML = `
+    <div class="meta-chip"><strong>${total}</strong> Questions</div>
+    <div class="meta-chip"><strong>${modeLabel}</strong></div>
+    <div class="meta-chip">⏱ <strong>${time}</strong></div>
+    <div class="meta-chip">📚 <strong>${state.selectedTopics.length}</strong> Topics</div>`;
+}
+
+function setMode(el) {
+  document.querySelectorAll('#mode-pills .pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  state.mode = el.dataset.mode;
+  updateStartMeta();
+}
+
+function setTheme(el, theme) {
+  document.querySelectorAll('.toolbar-group:nth-child(2) .pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.body.className = theme ? `theme-${theme}` : '';
+}
+
+function setCount(el) {
+  document.querySelectorAll('#count-pills .pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  state.count = el.dataset.count;
+  updateStartMeta();
+}
+
+// ═══════════════════════════════════════════════
+//  QUIZ LOGIC
+// ═══════════════════════════════════════════════
+function startQuiz() {
+  const pool = ALL_QUESTIONS.filter(q => state.selectedTopics.includes(q.topic));
+  if (pool.length === 0) { showToast('⚠️ Select at least one topic!', 'error'); return; }
+  const shuffled = shuffle([...pool]);
+  const count = state.count === 'all' ? shuffled.length : Math.min(parseInt(state.count), shuffled.length);
+  state.questions = shuffled.slice(0, count);
+  state.current = 0;
+  state.answers = {};
+  state.startTime = Date.now();
+  state.elapsedSeconds = 0;
+
+  showScreen('screen-quiz');
+  renderQuestion();
+
+  if (state.mode === 'exam') {
+    state.examTimeLeft = count * 60;
+    startExamTimer();
+  }
+  startElapsedTimer();
+}
+
+function startElapsedTimer() {
+  clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => { state.elapsedSeconds++; }, 1000);
+}
+
+function startExamTimer() {
+  clearInterval(state.examTimerInterval);
+  const timerEl = document.getElementById('timer');
+  timerEl.classList.remove('hidden');
+  state.examTimerInterval = setInterval(() => {
+    state.examTimeLeft--;
+    const m = Math.floor(state.examTimeLeft / 60).toString().padStart(2,'0');
+    const s = (state.examTimeLeft % 60).toString().padStart(2,'0');
+    timerEl.textContent = `⏱ ${m}:${s}`;
+    timerEl.className = 'timer';
+    if (state.examTimeLeft <= 60) timerEl.classList.add('warning');
+    if (state.examTimeLeft <= 20) timerEl.classList.add('danger');
+    if (state.examTimeLeft <= 0) { clearInterval(state.examTimerInterval); endQuiz(); }
+  }, 1000);
+}
+
+function renderQuestion() {
+  const q = state.questions[state.current];
+  const total = state.questions.length;
+  const pct = ((state.current + 1) / total) * 100;
+
+  document.getElementById('prog-label').textContent = `Question ${state.current+1} of ${total}`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('q-badge').textContent = `Q${state.current+1}`;
+  document.getElementById('q-topic').textContent = TOPICS.find(t => t.id === q.topic)?.name || q.topic;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-explanation').classList.add('hidden');
+
+  // Bookmark button
+  const bmBtn = document.getElementById('bm-btn');
+  bmBtn.textContent = state.bookmarks.has(q.id) ? '★' : '☆';
+  bmBtn.className = 'bookmark-btn' + (state.bookmarks.has(q.id) ? ' active' : '');
+
+  // Options
+  const optionsEl = document.getElementById('q-options');
+  const answered = state.answers[state.current];
+  optionsEl.innerHTML = q.options.map((opt, i) => {
+    let cls = 'option';
+    let disabled = '';
+    if (answered !== undefined) {
+      disabled = 'disabled';
+      if (i === q.ans) cls += ' correct';
+      else if (i === answered && i !== q.ans) cls += ' wrong';
+    } else if (answered === i) cls += ' selected';
+    const letters = ['A','B','C','D'];
+    return `<button class="${cls}" ${disabled} onclick="selectOption(${i})">
+      <span class="option-letter">${letters[i]}</span>
+      <span class="option-text">${opt}</span>
+    </button>`;
+  }).join('');
+
+  // Show explanation if answered (practice/review mode, or if already answered)
+  if (answered !== undefined && (state.mode === 'practice' || state.mode === 'review')) {
+    showExplanation(q);
+  }
+
+  // Nav buttons
+  document.getElementById('btn-prev').style.opacity = state.current === 0 ? '0.4' : '1';
+  document.getElementById('btn-next').textContent = state.current === total-1 ? '🏁 Finish' : 'Next →';
+  if (state.mode !== 'exam') document.getElementById('timer').classList.add('hidden');
+}
+
+function selectOption(i) {
+  const q = state.questions[state.current];
+  if (state.answers[state.current] !== undefined) return;
+  state.answers[state.current] = i;
+
+  // Re-render options with result
+  const optionsEl = document.getElementById('q-options');
+  const letters = ['A','B','C','D'];
+  optionsEl.innerHTML = q.options.map((opt, idx) => {
+    let cls = 'option';
+    if (idx === q.ans) cls += ' correct';
+    else if (idx === i && i !== q.ans) cls += ' wrong';
+    const isCorrect = i === q.ans;
+    return `<button class="${cls}" disabled>
+      <span class="option-letter">${letters[idx]}</span>
+      <span class="option-text">${opt}</span>
+    </button>`;
+  }).join('');
+
+  const correct = i === q.ans;
+  showToast(correct ? '✅ Correct!' : '❌ Incorrect', correct ? 'success' : 'error');
+  if (state.mode === 'practice' || state.mode === 'review') showExplanation(q);
+}
+
+function showExplanation(q) {
+  const el = document.getElementById('q-explanation');
+  el.innerHTML = `<strong>💡 Explanation:</strong> ${q.exp}`;
+  el.classList.remove('hidden');
+}
+
+function nextQ() {
+  if (state.current < state.questions.length - 1) {
+    state.current++;
+    renderQuestion();
+  } else {
+    endQuiz();
+  }
+}
+
+function prevQ() {
+  if (state.current > 0) { state.current--; renderQuestion(); }
+}
+
+function endQuiz() {
+  clearInterval(state.timerInterval);
+  clearInterval(state.examTimerInterval);
+  showScore();
+}
+
+// ═══════════════════════════════════════════════
+//  SCORE
+// ═══════════════════════════════════════════════
+function showScore() {
+  showScreen('screen-score');
+  const total = state.questions.length;
+  let correct = 0;
+  state.questions.forEach((q,i) => {
+    if (state.answers[i] === q.ans) correct++;
+  });
+  const wrong = Object.keys(state.answers).length - correct;
+  const pct = Math.round((correct/total)*100);
+
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('st-correct').textContent = correct;
+  document.getElementById('st-wrong').textContent = wrong;
+  const mins = Math.floor(state.elapsedSeconds/60);
+  const secs = state.elapsedSeconds % 60;
+  document.getElementById('st-time').textContent = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+
+  let grade, msg, color;
+  if (pct >= 70) { grade='Pass 🎉'; msg='Great work! Keep it up!'; color='var(--green)'; }
+  else if (pct >= 50) { grade='Average 📚'; msg='Almost there — review and retry!'; color='var(--amber)'; }
+  else { grade='Below Pass ❗'; msg='Keep studying — you can do it!'; color='var(--red)'; }
+
+  document.getElementById('score-grade').textContent = grade;
+  document.getElementById('score-grade').style.color = color;
+  document.getElementById('score-msg').textContent = msg;
+
+  // Animate ring
+  setTimeout(() => {
+    const circ = 2 * Math.PI * 54; // 339.3
+    const offset = circ * (1 - pct/100);
+    const arc = document.getElementById('score-arc');
+    arc.style.strokeDashoffset = offset;
+    arc.style.stroke = color;
+  }, 100);
+}
+
+// ═══════════════════════════════════════════════
+//  REVIEW
+// ═══════════════════════════════════════════════
+let reviewFilter = 'all';
+function reviewAnswers() {
+  reviewFilter = 'all';
+  renderReview();
+  showScreen('screen-review');
+}
+
+function filterReview(f, el) {
+  reviewFilter = f;
+  document.querySelectorAll('#screen-review .pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderReview();
+}
+
+function renderReview() {
+  const list = document.getElementById('review-list');
+  const letters = ['A','B','C','D'];
+  list.innerHTML = state.questions.map((q,i) => {
+    const ans = state.answers[i];
+    const isCorrect = ans === q.ans;
+    const isSkipped = ans === undefined;
+    if (reviewFilter === 'wrong' && (isCorrect || isSkipped)) return '';
+    if (reviewFilter === 'correct' && !isCorrect) return '';
+    const statusDot = isSkipped ? '<div class="dot-skip"></div>' : isCorrect ? '<div class="dot-correct"></div>' : '<div class="dot-wrong"></div>';
+    const statusText = isSkipped ? 'Skipped' : isCorrect ? 'Correct' : 'Incorrect';
+    const statusColor = isSkipped ? 'var(--amber)' : isCorrect ? 'var(--green)' : 'var(--red)';
+    return `<div class="review-item">
+      <div class="review-status">${statusDot}<span style="color:${statusColor}">${statusText}</span>
+        <span style="color:var(--muted);font-weight:400;margin-left:auto">Q${i+1}</span>
+      </div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:12px;line-height:1.5">${q.q}</div>
+      ${q.options.map((opt,idx) => {
+        let bg='var(--card)'; let border='var(--border)'; let fw='400';
+        if (idx === q.ans) { bg='rgba(16,185,129,0.15)'; border='var(--green)'; fw='600'; }
+        else if (idx === ans && ans !== q.ans) { bg='rgba(239,68,68,0.1)'; border='var(--red)'; }
+        return `<div style="background:${bg};border:1.5px solid ${border};border-radius:8px;padding:10px 14px;margin-bottom:7px;font-size:14px;font-weight:${fw};display:flex;gap:10px;">
+          <span style="background:var(--border);border-radius:5px;padding:2px 8px;font-size:12px;font-weight:700;color:var(--muted)">${letters[idx]}</span>
+          <span>${opt}</span>
+          ${idx === ans && ans !== q.ans ? '<span style="margin-left:auto">❌</span>' : ''}
+          ${idx === q.ans ? '<span style="margin-left:auto">✅</span>' : ''}
+        </div>`;
+      }).join('')}
+      <div class="explanation"><strong>💡</strong> ${q.exp}</div>
+    </div>`;
+  }).join('');
+}
+
+function retryWrong() {
+  const wrongQs = state.questions.filter((q,i) => state.answers[i] !== q.ans);
+  if (wrongQs.length === 0) { showToast('No wrong answers to retry! 🎉', 'success'); return; }
+  state.questions = shuffle(wrongQs);
+  state.current = 0;
+  state.answers = {};
+  state.startTime = Date.now();
+  state.elapsedSeconds = 0;
+  startElapsedTimer();
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+// ═══════════════════════════════════════════════
+//  BOOKMARKS
+// ═══════════════════════════════════════════════
+function toggleBookmark() {
+  const q = state.questions[state.current];
+  if (!q) return;
+  if (state.bookmarks.has(q.id)) { state.bookmarks.delete(q.id); showToast('Removed bookmark'); }
+  else { state.bookmarks.add(q.id); showToast('⭐ Bookmarked!', 'success'); }
+  localStorage.setItem('chm_bookmarks', JSON.stringify([...state.bookmarks]));
+  const bmBtn = document.getElementById('bm-btn');
+  bmBtn.textContent = state.bookmarks.has(q.id) ? '★' : '☆';
+  bmBtn.className = 'bookmark-btn' + (state.bookmarks.has(q.id) ? ' active' : '');
+}
+
+function renderBookmarksSection() {
+  const sec = document.getElementById('bookmarks-section');
+  const list = document.getElementById('bookmarks-list');
+  if (state.bookmarks.size === 0) { sec.classList.add('hidden'); return; }
+  sec.classList.remove('hidden');
+  list.innerHTML = [...state.bookmarks].map(id => {
+    const q = ALL_QUESTIONS.find(x => x.id === id);
+    if (!q) return '';
+    const topic = TOPICS.find(t => t.id === q.topic);
+    return `<div class="review-item">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">${topic?.icon} ${topic?.name}</div>
+      <div style="font-size:15px;font-weight:600">${q.q}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome() { clearInterval(state.examTimerInterval); clearInterval(state.timerInterval); showScreen('screen-home'); renderBookmarksSection(); }
+function goScore() { showScreen('screen-score'); }
+
+// ═══════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' '+type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.classList.remove('show'); }, 2200);
+}
+
+// ═══════════════════════════════════════════════
+//  UTIL
+// ═══════════════════════════════════════════════
+function shuffle(arr) {
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// ═══════════════════════════════════════════════
+//  START
+// ═══════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
